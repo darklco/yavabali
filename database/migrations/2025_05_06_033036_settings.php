@@ -11,17 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
-            $table->uuid('id') -> primary();
-            $table->json('title')->nullable();
-            $table->json('image')->nullable();
+        Schema::create('settings', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->json('title');
+            $table->json('key')->unique();
+            $table->json('value')->nullable();
             $table->json('description')->nullable();
-            $table->foreignUuid('category_id')->nullable()->constrained('categories')->onDelete('set null');
+            $table->string('type')->nullable(); 
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-        
         });
-        
     }
 
     /**

@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->uuid('id') -> primary();
-            $table->json('title')->nullable();
+        Schema::create('products_type', function (Blueprint $table) {
+            $table->uuid('id')->primary;
+            $table->json('tittle')->nullable();
             $table->json('icon')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
-        
     }
 
     /**

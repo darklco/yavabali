@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->uuid('id') -> primary();
-            $table->json('title')->nullable();
-            $table->json('icon')->nullable();
-            $table->timestamps();
+        Schema::create('ingredients', function (Blueprint $table) {
+            $table->uuid('id') ->primary();
+            $table->json('name')->nullable();
+            $table->json('image')->nullable();
+            $table->json('origin')->nullable();
+            $table->timestamp('created_at')->useCurrent()->nullable();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate()->nullable();
             $table->softDeletes();
         });
         
