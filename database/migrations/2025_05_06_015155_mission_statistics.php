@@ -19,8 +19,8 @@ return new class extends Migration
             $table->decimal('leaders_percentage', 5, 2);
             $table->decimal('workers_percentage', 5, 2);
             $table->integer('glycemic_index');
-            $table->timestamp('created_at')->useCurrent()->nullable();
-            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate()->nullable();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('mission_statistics');
     }
 };

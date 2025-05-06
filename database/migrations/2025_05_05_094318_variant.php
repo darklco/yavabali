@@ -17,8 +17,7 @@ return new class extends Migration
             $table->json('size')->nullable();
             $table->json('image_front')->nullable();
             $table->json('image_back')->nullable();
-            $table->timestamp('created_at')->useCurrent()->nullable();
-            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate()->nullable();
+            $table->timestamps();
             $table->softDeletes();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('variant');
     }
 };

@@ -22,8 +22,7 @@ return new class extends Migration
             $table->enum('type', ['podcast', 'testimonial'])->nullable();
             $table->string('type_url')->nullable(); 
             $table->json('published_at')->nullable();
-            $table->timestamp('created_at')->useCurrent()->nullable();
-            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate()->nullable();
+            $table->timestamps();
             $table->softDeletes();
         });
     }

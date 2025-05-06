@@ -18,8 +18,7 @@ return new class extends Migration
             $table->json('icon')->nullable();
             $table->json('link')->nullable();
             $table->enum('type', ['local', 'international'])->nullable();
-            $table->timestamp('created_at')->useCurrent()->nullable();
-            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate()->nullable();
+            $table->timestamps();
             $table->softDeletes();
         });
     }
