@@ -12,13 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('variant', function (Blueprint $table) {
-            $table->uuid('id')->primary;
-            $table->foreignUuid('products_id')->constrained('products', 'id')->onDelete('cascade');
+            $table->uuid('id')->primary();
             $table->json('size')->nullable();
             $table->json('image_front')->nullable();
             $table->json('image_back')->nullable();
             $table->timestamps();
             $table->softDeletes();
+        });
+
+        Schema::table('variants', function (Blueprint $table) {
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+        });
+
+        Schema::table('product_ecommerces', function (Blueprint $table) {
+            $table->foreign('variant_id')->references('id')->on('variants')->onDelete('cascade');
         });
     }
 

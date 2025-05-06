@@ -16,6 +16,7 @@ return new class extends Migration
             $table->json('title')->nullable();
             $table->json('image')->nullable();
             $table->json('description')->nullable();
+            $table->json('nutrient')->nullable();
             $table->foreignUuid('category_id')->nullable()->constrained('categories')->onDelete('set null');
             $table->timestamps();
             $table->softDeletes();

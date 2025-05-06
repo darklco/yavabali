@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('settings', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->json('title');
-            $table->json('key')->unique();
             $table->json('value')->nullable();
             $table->json('description')->nullable();
             $table->string('type')->nullable(); 

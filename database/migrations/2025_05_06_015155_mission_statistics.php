@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('leaders_percentage', 5, 2);
             $table->decimal('workers_percentage', 5, 2);
             $table->integer('glycemic_index');
+            $table->json('additional_metrics')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -19,8 +19,10 @@ return new class extends Migration
             $table->json('content')->nullable();
             $table->string('media_url')->nullable();
             $table->json('author')->nullable();
+            $table->boolean('is_highlight')->default(0);
             $table->enum('type', ['podcast', 'testimonial'])->nullable();
             $table->string('type_url')->nullable(); 
+            $table->json('tags')->nullable();
             $table->json('published_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
