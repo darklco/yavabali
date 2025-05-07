@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema ::create('mission_statistics', function(Blueprint $table){
             $table->uuid('id')->primary();
-            $table->integer('year')->nullable();
-            $table->integer('tons')->nullable();
-            $table->integer('employeses')->nullable();
-            $table->decimal('leaders_percentage', 5, 2);
-            $table->decimal('workers_percentage', 5, 2);
-            $table->integer('glycemic_index');
-            $table->json('additional_metrics')->nullable();
+            $table->year('year')->nullable();
+            $table->integer('total_raw_materials')->comment('Total raw materials sourced (in tons)');
+            $table->integer('total_employees')->comment('Number of employees');
+            $table->decimal('female_leaders_percentage', 5, 2)->comment('Percentage of female leaders');
+            $table->decimal('female_workers_percentage', 5, 2)->comment('Percentage of female workers');
+            $table->integer('glycemic_index')->comment('Glycemic index of the product');
             $table->timestamps();
             $table->softDeletes();
         });
