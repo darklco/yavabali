@@ -24,9 +24,6 @@ return new class extends Migration
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
 
-        Schema::table('product_ecommerces', function (Blueprint $table) {
-            $table->foreign('variant_id')->references('id')->on('variants')->onDelete('cascade');
-        });
     }
 
     /**

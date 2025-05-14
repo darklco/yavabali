@@ -10,24 +10,13 @@ class ProductEcommerce extends Model
 {
     use HasFactory, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    protected $table = 'products_ecommerces'; // <-- ini penting
+
     protected $fillable = [
         'variant_id',
         'title',
         'icon',
         'link',
-        'type'
+        'type',
     ];
-
-    /**
-     * Get the variant that owns the ecommerce link.
-     */
-    public function variant()
-    {
-        return $this->belongsTo(Variant::class);
-    }
 }

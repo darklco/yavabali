@@ -2,27 +2,29 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductResource extends JsonResource
+class NewsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @return array<string, mixed>
      */
-    public function toArray($request)
+    public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
-            'types' => $this->types,
             'title' => $this->title,
             'slug' => $this->slug,
-            'description' => $this->description,
+            'excerpt' => $this->excerpt,
+            'content' => $this->content,
+            'media_url' => $this->media_url,
+            'author' => $this->author,
+            'is_highlight' => $this->is_highlight,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'category' => CategoryResource::collection($this->whenLoaded('category')),
         ];
     }
 }

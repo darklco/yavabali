@@ -1,0 +1,93 @@
+[
+  {
+    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "title": {
+      "en": "All Products",
+      "id": "Semua Produk"
+    },
+    "icon": {
+      "en": "all-products",
+      "id": "semua-produk"
+    },
+    "created_at": "2025-05-13T12:00:00.000Z",
+    "updated_at": "2025-05-13T12:00:00.000Z"
+  },
+  {
+    "id": "7a51f938-5a0c-4a10-8c3d-46bea7c3e50a",
+    "title": {
+      "en": "Granola",
+      "id": "Granola"
+    },
+    "icon": {
+      "en": "granola",
+      "id": "granola"
+    },
+    "created_at": "2025-05-13T12:00:00.000Z",
+    "updated_at": "2025-05-13T12:00:00.000Z"
+  },
+  {
+    "id": "9c18f856-3a5d-4b62-8a3a-4ef141192daa",
+    "title": {
+      "en": "Biscuits",
+      "id": "Biskuit"
+    },
+    "icon": {
+      "en": "biscuits",
+      "id": "biskuit"
+    },
+    "created_at": "2025-05-13T12:00:00.000Z",
+    "updated_at": "2025-05-13T12:00:00.000Z"
+  },
+  {
+    "id": "baa8ef2c-22a0-4030-a9c9-694f93d1d843",
+    "title": {
+      "en": "Bar",
+      "id": "Bar"
+    },
+    "icon": {
+      "en": "bar",
+      "id": "bar"
+    },
+    "created_at": "2025-05-13T12:00:00.000Z",
+    "updated_at": "2025-05-13T12:00:00.000Z"
+  },
+  {
+    "id": "6f3eb7cd-4010-4c7c-b689-c8d4bf26e1f5",
+    "title": {
+      "en": "Popcorn",
+      "id": "Popcorn"
+    },
+    "icon": {
+      "en": "popcorn",
+      "id": "popcorn"
+    },
+    "created_at": "2025-05-13T12:00:00.000Z",
+    "updated_at": "2025-05-13T12:00:00.000Z"
+  },
+  {
+    "id": "3c6e4c1c-8f9d-4f75-9fd7-e737127a9f99",
+    "title": {
+      "en": "Puffs",
+      "id": "Puffs"
+    },
+    "icon": {
+      "en": "puffs",
+      "id": "puffs"
+    },
+    "created_at": "2025-05-13T12:00:00.000Z",
+    "updated_at": "2025-05-13T12:00:00.000Z"
+  },
+  {
+    "id": "d5a92982-5d8a-42e1-81cb-80876a3ce5c6",
+    "title": {
+      "en": "Cashews",
+      "id": "Kacang Mede"
+    },
+    "icon": {
+      "en": "cashews",
+      "id": "kacang-mede"
+    },
+    "created_at": "2025-05-13T12:00:00.000Z",
+    "updated_at": "2025-05-13T12:00:00.000Z"
+  }
+]

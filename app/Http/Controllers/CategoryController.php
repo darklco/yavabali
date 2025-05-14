@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
@@ -20,10 +20,12 @@ class CategoryController extends Controller
     {
         $categories = Category::all();
         
-        return response()->json([
-            'success' => true,
-            'data' => CategoryResource::collection($categories)
-        ]);
+         return response()->json([
+        'status' => 'success',
+        'data' => [
+            'categories' => $categories
+        ]
+    ]);
     }
 
     /**

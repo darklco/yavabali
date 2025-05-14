@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Ingredient;
@@ -9,17 +9,35 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+/**
+ * @OA\Info(
+ *     title="Yavabali API",
+ *     version="1.0",
+ *     description="API untuk mengelola data bahan makanan"
+ * )
+ *
+ * @OA\Tag(
+ *     name="Ingredients",
+ *     description="API terkait data bahan makanan"
+ * )
+ */
 class IngredientController extends Controller
 {
     /**
-     * Display a listing of ingredients
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Get(
+     *     path="/api/ingredients",
+     *     summary="Get all ingredients",
+     *     tags={"Ingredients"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success"
+     *     )
+     * )
      */
     public function index()
     {
         $ingredients = Ingredient::paginate(15);
-        
+      
         return response()->json([
             'status' => 'success',
             'data' => $ingredients->items(),
@@ -33,10 +51,30 @@ class IngredientController extends Controller
     }
 
     /**
-     * Store a newly created ingredient
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Post(
+     *     path="/api/ingredients",
+     *     summary="Create new ingredient",
+     *     tags={"Ingredients"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"NAME"},
+     *             @OA\Property(property="NAME", type="string"),
+     *             @OA\Property(property="origin", type="string"),
+     *             @OA\Property(property="image", type="string", format="binary"),
+     *             @OA\Property(property="nutritional_info", type="array", @OA\Items(type="string")),
+     *             @OA\Property(property="properties", type="array", @OA\Items(type="string"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Ingredient created successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -78,10 +116,25 @@ class IngredientController extends Controller
     }
 
     /**
-     * Display the specified ingredient
-     *
-     * @param  string  $slug
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Get(
+     *     path="/api/ingredients/{slug}",
+     *     summary="Show ingredient by slug",
+     *     tags={"Ingredients"},
+     *     @OA\Parameter(
+     *         name="slug",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Ingredient not found"
+     *     )
+     * )
      */
     public function show($slug)
     {
@@ -94,11 +147,34 @@ class IngredientController extends Controller
     }
 
     /**
-     * Update the specified ingredient
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Put(
+     *     path="/api/ingredients/{id}",
+     *     summary="Update ingredient",
+     *     tags={"Ingredients"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="NAME", type="string"),
+     *             @OA\Property(property="origin", type="string"),
+     *             @OA\Property(property="image", type="string", format="binary"),
+     *             @OA\Property(property="nutritional_info", type="array", @OA\Items(type="string")),
+     *             @OA\Property(property="properties", type="array", @OA\Items(type="string"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Ingredient updated successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     )
+     * )
      */
     public function update(Request $request, $id)
     {
@@ -138,7 +214,6 @@ class IngredientController extends Controller
         }
         
         if ($request->hasFile('image')) {
-            // Delete old image if exists
             if ($ingredient->image) {
                 Storage::disk('public')->delete($ingredient->image);
             }
@@ -157,16 +232,30 @@ class IngredientController extends Controller
     }
 
     /**
-     * Remove the specified ingredient
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Delete(
+     *     path="/api/ingredients/{id}",
+     *     summary="Delete ingredient",
+     *     tags={"Ingredients"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Ingredient deleted successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Ingredient not found"
+     *     )
+     * )
      */
     public function destroy($id)
     {
         $ingredient = Ingredient::findOrFail($id);
         
-        // Delete image if exists
         if ($ingredient->image) {
             Storage::disk('public')->delete($ingredient->image);
         }

@@ -1,242 +1,200 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\NewsResource;
 use App\Models\News;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class NewsController extends Controller
 {
     /**
-     * Display a listing of news
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * Display a listing of the news.
      */
     public function index()
     {
-        $news = News::paginate(15);
-        
-        return response()->json([
-            'status' => 'success',
-            'data' => $news->items(),
-            'meta' => [
-                'total' => $news->total(),
-                'per_page' => $news->perPage(),
-                'current_page' => $news->currentPage(),
-                'last_page' => $news->lastPage(),
-            ]
-        ]);
+        $news = News::latest()->paginate(10);
+        return NewsResource::collection($news)
+            ->additional(['status' => 'success']);
     }
 
     /**
-     * Store a newly created news
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * Store a new news item.
      */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'excerpt' => 'nullable|string',
-            'content' => 'required|string',
-            'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            'author' => 'nullable|string|max:100',
-            'published_at' => 'nullable|date',
-            'is_highlight' => 'nullable|boolean',
-            'tags' => 'nullable|array',
-            'meta_data' => 'nullable|array',
-            'type' => 'nullable|string',
-            'type_url' => 'nullable|string',
+            'title' => 'required|array',
+            'excerpt' => 'required|array',
+            'content' => 'required|array',
             'media_url' => 'nullable|string',
+            'author' => 'required|array',
+            'is_highlight' => 'boolean',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Validation error',
-                'errors' => $validator->errors()
+                'message' => $validator->errors(),
             ], 422);
         }
 
-        $news = new News();
-        $news->title = json_encode(['id' => $request->title]);
-        $news->slug = Str::slug($request->title);
-        $news->excerpt = $request->excerpt ? json_encode(['id' => $request->excerpt]) : null;
-        $news->content = json_encode(['id' => $request->content]);
-        $news->author = json_encode(['name' => $request->author ?? 'Yava']);
-        $news->published_at = $request->published_at ? $request->published_at : null;
-        $news->is_highlight = $request->is_highlight ?? false;
-        $news->tags = $request->tags ? json_encode($request->tags) : null;
-        $news->meta_data = $request->meta_data ? json_encode($request->meta_data) : null;
-        $news->type = $request->type ?? null;
-        $news->type_url = $request->type_url ?? null;
-        $news->media_url = $request->media_url ?? null;
-        
-        // Handle image uploads
-        if ($request->hasFile('images')) {
-            $imagesPaths = [];
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('news', 'public');
-                $imagesPaths[] = $path;
-            }
-            $news->images = json_encode($imagesPaths);
-        }
-        
-        $news->save();
-        
-        return response()->json([
-            'status' => 'success',
-            'message' => 'News created successfully',
-            'data' => $news
-        ], 201);
-    }
-
-    /**
-     * Display the specified news
-     *
-     * @param  string  $slug
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show($slug)
-    {
-        $news = News::where('slug', $slug)->firstOrFail();
-        
-        return response()->json([
-            'status' => 'success',
-            'data' => $news
+        $news = News::create([
+            'title' => $request->title,
+            'slug' => Str::slug($request->title['en'] ?? ''),
+            'excerpt' => $request->excerpt,
+            'content' => $request->content,
+            'media_url' => $request->media_url,
+            'author' => $request->author,
+            'is_highlight' => $request->is_highlight ?? false,
         ]);
+
+        return new NewsResource($news);
     }
 
     /**
-     * Update the specified news
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * Display the specified news item.
+     */
+    public function show($id)
+    {
+        $news = News::find($id);
+        
+        if (!$news) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'News not found',
+            ], 404);
+        }
+
+        return new NewsResource($news);
+    }
+
+    /**
+     * Show news by slug.
+     */
+    public function showBySlug($slug)
+    {
+        $news = News::where('slug', $slug)->first();
+        
+        if (!$news) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'News not found',
+            ], 404);
+        }
+
+        return new NewsResource($news);
+    }
+
+    /**
+     * Update the specified news item.
      */
     public function update(Request $request, $id)
     {
-        $news = News::findOrFail($id);
+        $news = News::find($id);
         
+        if (!$news) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'News not found',
+            ], 404);
+        }
+
         $validator = Validator::make($request->all(), [
-            'title' => 'sometimes|string|max:255',
-            'excerpt' => 'nullable|string',
-            'content' => 'sometimes|string',
-            'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            'author' => 'nullable|string|max:100',
-            'published_at' => 'nullable|date',
-            'is_highlight' => 'nullable|boolean',
-            'tags' => 'nullable|array',
-            'meta_data' => 'nullable|array',
-            'type' => 'nullable|string',
-            'type_url' => 'nullable|string',
+            'title' => 'array',
+            'excerpt' => 'array',
+            'content' => 'array',
             'media_url' => 'nullable|string',
+            'author' => 'array',
+            'is_highlight' => 'boolean',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Validation error',
-                'errors' => $validator->errors()
+                'message' => $validator->errors(),
             ], 422);
         }
 
-        if ($request->has('title')) {
-            $news->title = json_encode(['id' => $request->title]);
-            $news->slug = Str::slug($request->title);
+        // Update slug only if title is provided
+        $data = $request->all();
+        if (isset($data['title']) && isset($data['title']['en'])) {
+            $data['slug'] = Str::slug($data['title']['en']);
         }
-        if ($request->has('excerpt')) {
-            $news->excerpt = json_encode(['id' => $request->excerpt]);
-        }
-        if ($request->has('content')) {
-            $news->content = json_encode(['id' => $request->content]);
-        }
-        if ($request->has('author')) {
-            $news->author = json_encode(['name' => $request->author]);
-        }
-        if ($request->has('published_at')) {
-            $news->published_at = $request->published_at;
-        }
-        if ($request->has('is_highlight')) {
-            $news->is_highlight = $request->is_highlight;
-        }
-        if ($request->has('tags')) {
-            $news->tags = json_encode($request->tags);
-        }
-        if ($request->has('meta_data')) {
-            $news->meta_data = json_encode($request->meta_data);
-        }
-        if ($request->has('type')) {
-            $news->type = $request->type;
-        }
-        if ($request->has('type_url')) {
-            $news->type_url = $request->type_url;
-        }
-        if ($request->has('media_url')) {
-            $news->media_url = $request->media_url;
-        }
+
+        $news->update($data);
+
+        return new NewsResource($news);
+    }
+
+    /**
+     * Remove the specified news item.
+     */
+    public function destroy($id)
+    {
+        $news = News::find($id);
         
-        // Handle image uploads
-        if ($request->hasFile('images')) {
-            // Delete old images
-            if ($news->images) {
-                $oldImages = json_decode($news->images, true);
-                if (is_array($oldImages)) {
-                    foreach ($oldImages as $image) {
-                        Storage::disk('public')->delete($image);
-                    }
-                }
-            }
-            
-            $imagesPaths = [];
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('news', 'public');
-                $imagesPaths[] = $path;
-            }
-            $news->images = json_encode($imagesPaths);
+        if (!$news) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'News not found',
+            ], 404);
         }
-        
-        $news->save();
-        
+
+        $news->delete();
+
         return response()->json([
             'status' => 'success',
-            'message' => 'News updated successfully',
-            'data' => $news
+            'message' => 'News deleted successfully',
         ]);
     }
 
     /**
-     * Remove the specified news
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * Get highlighted news.
      */
-    public function destroy($id)
+    public function highlights()
     {
-        $news = News::findOrFail($id);
-        
-        // Delete related images
-        if ($news->images) {
-            $images = json_decode($news->images, true);
-            if (is_array($images)) {
-                foreach ($images as $image) {
-                    Storage::disk('public')->delete($image);
-                }
-            }
-        }
-        
-        $news->delete();
-        
-        return response()->json([
-            'status' => 'success',
-            'message' => 'News deleted successfully'
-        ]);
+        $news = News::where('is_highlight', true)
+            ->latest()
+            ->paginate(10);
+            
+        return NewsResource::collection($news)
+            ->additional(['status' => 'success']);
+    }
+
+    /**
+     * Get "You May Like" news - 8 latest news items.
+     */
+    public function youMayLike()
+    {
+        $news = News::latest()
+            ->limit(8)
+            ->get();
+            
+        return NewsResource::collection($news)
+            ->additional([
+                'status' => 'success',
+                'message' => 'You may like these news'
+            ]);
+    }
+
+    /**
+     * Get "You May Like" news excluding current news.
+     */
+    public function youMayLikeNews($id)
+    {
+        $news = News::where('id', '!=', $id)
+            ->latest()
+            ->limit(8)
+            ->get();
+            
+        return NewsResource::collection($news)
+            ->additional([
+                'status' => 'success',
+                'message' => 'Related news'
+            ]);
     }
 }

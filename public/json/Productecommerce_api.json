@@ -1,0 +1,17 @@
+{
+  "tittle": {
+    "id": "Nama Produk (Indonesia)",
+    "en": "Product Name (English)"
+  },
+  "icon": {
+    "path": "path/to/icon/image.png",
+    "alt_text": "Deskripsi ikon",
+    "width": 64,
+    "height": 64
+  },
+  "link": {
+    "website": "https://example.com/product/123",
+    "mobile_app": "app://product/123",
+    "affiliate": "https://affiliate-link.com/product/123"
+  }
+}

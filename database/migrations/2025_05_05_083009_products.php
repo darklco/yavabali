@@ -12,17 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->uuid('id') -> primary();
+            $table->uuid('id')->primary();
             $table->json('title')->nullable();
             $table->json('image')->nullable();
             $table->json('description')->nullable();
-            $table->json('nutrient')->nullable();
+
+            // Menghapus nutrient dan menggantinya dengan relasi ke ingredients
+            $table->foreignUuid('ingredient_id')->nullable()->constrained('ingredients')->onDelete('set null');
+
             $table->foreignUuid('category_id')->nullable()->constrained('categories')->onDelete('set null');
             $table->timestamps();
             $table->softDeletes();
-        
         });
-        
     }
 
     /**

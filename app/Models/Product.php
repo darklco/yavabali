@@ -30,9 +30,11 @@ class product extends Model
      * @var array
      */
     protected $casts = [
-        'types' => 'array',
-        'nutrient' => 'array',
-    ];
+    'title' => 'array',
+    'description' => 'array',
+    'types' => 'array', // jika types juga disimpan sebagai JSON
+];
+
 
     /**
      * Get the variants for the product.
@@ -40,5 +42,15 @@ class product extends Model
     public function variants()
     {
         return $this->hasMany(Variant::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+     public function ingredients()
+    {
+        return $this->hasMany(ingredient::class);
     }
 }

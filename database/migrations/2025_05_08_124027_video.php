@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products_type', function (Blueprint $table) {
+        Schema::create('video', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->json('tittle')->nullable();
-            $table->json('icon')->nullable();
+            $table->enum('type', ['podcast', 'testimonial'])->nullable();
+            $table->string('type_url')->nullable(); 
+            $table->json('tags')->nullable();
+            $table->json('published_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products_type');
+        Schema::dropIfExists('video');
     }
 };

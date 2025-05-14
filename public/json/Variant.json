@@ -1,0 +1,17 @@
+{
+  "id": "1a2b3c4d-5678-90ab-cdef-1234567890ab",
+  "product_id": "9f8e7d6c-5432-10fe-dcba-9876543210dc",
+  "size": {
+    "small": "100g",
+    "medium": "200g",
+    "large": "500g"
+  },
+  "image_front": {
+    "url": "https://yourdomain.com/images/product1_front.jpg"
+  },
+  "image_back": {
+    "url": "https://yourdomain.com/images/product1_back.jpg"
+  },
+  "created_at": "2025-05-14T08:00:00.000000Z",
+  "updated_at": "2025-05-14T08:00:00.000000Z"
+}

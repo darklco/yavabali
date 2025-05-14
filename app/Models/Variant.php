@@ -2,39 +2,34 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Variant extends Model
 {
     use HasFactory, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    protected $table = 'variant';
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = [
+        'id',
         'product_id',
         'size',
         'image_front',
-        'image_back'
+        'image_back',
     ];
 
-    /**
-     * Get the product that owns the variant.
-     */
+    protected $casts = [
+        'size' => 'array',
+        'image_front' => 'array',
+        'image_back' => 'array',
+    ];
+
     public function product()
     {
         return $this->belongsTo(Product::class);
-    }
-
-    /**
-     * Get the ecommerces for the variant.
-     */
-    public function ecommerces()
-    {
-        return $this->hasMany(ProductEcommerce::class, 'variant_id');
     }
 }

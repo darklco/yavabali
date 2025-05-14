@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+
+Route::get('/api/docs', function () {
+    return view('product');
 });
+
+Route::get('/docs', function () {
+    $jsonPath = storage_path('api-docs/api-docs.json');
+    if (!File::exists($jsonPath)) {
+        abort(404, 'File not found');
+    }
+
+    $json = File::get($jsonPath);
+    return Response::make($json, 200, [
+        'Content-Type' => 'application/json',
+    ]);
+})->name('l5-swagger.default.docs');

@@ -1,0 +1,627 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "YAVA News API",
+    "description": "API untuk menampilkan daftar berita YAVA",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000"
+    }
+  ],
+  "paths": {
+    "/api/news": {
+      "get": {
+        "summary": "Get All News",
+        "description": "Menampilkan semua berita terbaru dengan pagination",
+        "responses": {
+          "200": {
+            "description": "Daftar berita berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/News"
+                      }
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create News",
+        "description": "Membuat berita baru",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Berita berhasil dibuat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validasi gagal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/news/{id}": {
+      "get": {
+        "summary": "Get News by ID",
+        "description": "Menampilkan berita berdasarkan ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Berita berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Berita tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update News",
+        "description": "Mengupdate berita berdasarkan ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Berita berhasil diupdate",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Berita tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete News",
+        "description": "Menghapus berita berdasarkan ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Berita berhasil dihapus",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Berita tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/news/slug/{slug}": {
+      "get": {
+        "summary": "Get News by Slug",
+        "description": "Menampilkan berita berdasarkan slug",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Berita berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Berita tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/news/highlights": {
+      "get": {
+        "summary": "Get Highlighted News",
+        "description": "Menampilkan berita yang ditandai sebagai highlight",
+        "responses": {
+          "200": {
+            "description": "Daftar berita highlight berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/news/you-may-like": {
+      "get": {
+        "summary": "Get You May Like News",
+        "description": "Menampilkan 8 berita terbaru yang mungkin disukai",
+        "responses": {
+          "200": {
+            "description": "Daftar berita berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/YouMayLikeNewsList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/news/you-may-like/{id}": {
+      "get": {
+        "summary": "Get Related News",
+        "description": "Menampilkan berita terkait kecuali berita dengan ID tertentu",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Daftar berita terkait berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelatedNewsList"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "News": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "Smooth Fasting & Stable Blood Sugar"
+          },
+          "content": {
+            "type": "string",
+            "example": "Artikel tentang pola makan saat sahur & berbuka"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-03-25T10:00:00Z"
+          }
+        }
+      },
+      "NewsRequest": {
+        "type": "object",
+        "required": ["title", "excerpt", "content", "author"],
+        "properties": {
+          "title": {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "string",
+                "example": "Smooth Fasting & Stable Blood Sugar"
+              },
+              "id": {
+                "type": "string",
+                "example": "Puasa Lancar & Gula Darah Stabil"
+              }
+            }
+          },
+          "excerpt": {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "string",
+                "example": "Short description about fasting"
+              },
+              "id": {
+                "type": "string",
+                "example": "Deskripsi singkat tentang puasa"
+              }
+            }
+          },
+          "content": {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "string",
+                "example": "Full article content in English"
+              },
+              "id": {
+                "type": "string",
+                "example": "Konten artikel lengkap dalam Bahasa Indonesia"
+              }
+            }
+          },
+          "media_url": {
+            "type": "string",
+            "example": "https://example.com/images/fasting.jpg"
+          },
+          "author": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Dr. Ahmad"
+              },
+              "title": {
+                "type": "string",
+                "example": "Health Specialist"
+              }
+            }
+          },
+          "is_highlight": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "NewsUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "string",
+                "example": "Updated: Smooth Fasting & Stable Blood Sugar"
+              },
+              "id": {
+                "type": "string",
+                "example": "Diperbarui: Puasa Lancar & Gula Darah Stabil"
+              }
+            }
+          },
+          "excerpt": {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "string",
+                "example": "Updated description"
+              },
+              "id": {
+                "type": "string",
+                "example": "Deskripsi yang diperbarui"
+              }
+            }
+          },
+          "content": {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "string",
+                "example": "Updated full article content"
+              },
+              "id": {
+                "type": "string",
+                "example": "Konten artikel lengkap yang diperbarui"
+              }
+            }
+          },
+          "media_url": {
+            "type": "string",
+            "example": "https://example.com/images/updated-fasting.jpg"
+          },
+          "author": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Dr. Ahmad"
+              },
+              "title": {
+                "type": "string",
+                "example": "Senior Health Specialist"
+              }
+            }
+          },
+          "is_highlight": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
+      "NewsDetail": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 1
+              },
+              "title": {
+                "type": "object",
+                "properties": {
+                  "en": {
+                    "type": "string",
+                    "example": "Smooth Fasting & Stable Blood Sugar"
+                  },
+                  "id": {
+                    "type": "string",
+                    "example": "Puasa Lancar & Gula Darah Stabil"
+                  }
+                }
+              },
+              "slug": {
+                "type": "string",
+                "example": "smooth-fasting-stable-blood-sugar"
+              },
+              "excerpt": {
+                "type": "object",
+                "properties": {
+                  "en": {
+                    "type": "string",
+                    "example": "Short description about fasting"
+                  },
+                  "id": {
+                    "type": "string",
+                    "example": "Deskripsi singkat tentang puasa"
+                  }
+                }
+              },
+              "content": {
+                "type": "object",
+                "properties": {
+                  "en": {
+                    "type": "string",
+                    "example": "Full article content in English"
+                  },
+                  "id": {
+                    "type": "string",
+                    "example": "Konten artikel lengkap dalam Bahasa Indonesia"
+                  }
+                }
+              },
+              "media_url": {
+                "type": "string",
+                "example": "https://example.com/images/fasting.jpg"
+              },
+              "author": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Dr. Ahmad"
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "Health Specialist"
+                  }
+                }
+              },
+              "is_highlight": {
+                "type": "boolean",
+                "example": true
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-03-25T10:00:00Z"
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-03-25T10:00:00Z"
+              }
+            }
+          }
+        }
+      },
+      "NewsList": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/News"
+            }
+          },
+          "status": {
+            "type": "string",
+            "example": "success"
+          }
+        }
+      },
+      "YouMayLikeNewsList": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/News"
+            }
+          },
+          "status": {
+            "type": "string",
+            "example": "success"
+          },
+          "message": {
+            "type": "string",
+            "example": "You may like these news"
+          }
+        }
+      },
+      "RelatedNewsList": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/News"
+            }
+          },
+          "status": {
+            "type": "string",
+            "example": "success"
+          },
+          "message": {
+            "type": "string",
+            "example": "Related news"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "message": {
+            "type": "string",
+            "example": "News not found"
+          }
+        }
+      },
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success"
+          },
+          "message": {
+            "type": "string",
+            "example": "News deleted successfully"
+          }
+        }
+      }
+    }
+  }
+}

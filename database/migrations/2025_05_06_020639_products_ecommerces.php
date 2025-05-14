@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('products_ecommerces', function(Blueprint $table){
             $table->uuid('id')->primary();
-            $table->unsignedBigInteger('variant_id')->nullable();
             $table->json('tittle')->nullable();
             $table->json('icon')->nullable();
             $table->json('link')->nullable();
