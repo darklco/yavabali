@@ -2,83 +2,58 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Yavabali API",
-        "description": "API untuk mengelola data bahan makanan",
+        "description": "API untuk mengelola data kategori, produk, varian produk, berita, dan video (hanya endpoint GET)",
         "version": "1.0"
     },
     "paths": {
-        "/api/ingredients": {
+        "/api/product-ecommerce": {
             "get": {
-                "tags": [
-                    "Ingredients"
+                "tags": ["E-commerce"],
+                "summary": "Get all e-commerce products",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        },
+                        "description": "Page number"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 5
+                        },
+                        "description": "Number of items per page"
+                    }
                 ],
-                "summary": "Get all ingredients",
-                "operationId": "88554df920fe97e07f179ca559f98b75",
                 "responses": {
                     "200": {
                         "description": "Success"
                     }
                 }
-            },
-            "post": {
-                "tags": [
-                    "Ingredients"
-                ],
-                "summary": "Create new ingredient",
-                "operationId": "290f4795ec7faed0d1e88d61aeb935ee",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "NAME"
-                                ],
-                                "properties": {
-                                    "NAME": {
-                                        "type": "string"
-                                    },
-                                    "origin": {
-                                        "type": "string"
-                                    },
-                                    "image": {
-                                        "type": "string",
-                                        "format": "binary"
-                                    },
-                                    "nutritional_info": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "properties": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string"
-                                        }
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
+            }
+        },
+        "/api/categories": {
+            "get": {
+                "tags": ["Categories"],
+                "summary": "Get all categories",
                 "responses": {
-                    "201": {
-                        "description": "Ingredient created successfully"
-                    },
-                    "422": {
-                        "description": "Validation error"
+                    "200": {
+                        "description": "Success"
                     }
                 }
             }
         },
-        "/api/ingredients/{slug}": {
+        "/api/categories/{slug}": {
             "get": {
-                "tags": [
-                    "Ingredients"
-                ],
-                "summary": "Show ingredient by slug",
-                "operationId": "bc6521d52642f36fdbd7d2dcf943fa4f",
+                "tags": ["Categories"],
+                "summary": "Show category by slug",
                 "parameters": [
                     {
                         "name": "slug",
@@ -94,98 +69,14 @@
                         "description": "Success"
                     },
                     "404": {
-                        "description": "Ingredient not found"
-                    }
-                }
-            }
-        },
-        "/api/ingredients/{id}": {
-            "put": {
-                "tags": [
-                    "Ingredients"
-                ],
-                "summary": "Update ingredient",
-                "operationId": "b2b705f67b293905971309a7927b3636",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "NAME": {
-                                        "type": "string"
-                                    },
-                                    "origin": {
-                                        "type": "string"
-                                    },
-                                    "image": {
-                                        "type": "string",
-                                        "format": "binary"
-                                    },
-                                    "nutritional_info": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "properties": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string"
-                                        }
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Ingredient updated successfully"
-                    },
-                    "422": {
-                        "description": "Validation error"
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Ingredients"
-                ],
-                "summary": "Delete ingredient",
-                "operationId": "d7a227e0854bd498dfe1c1b9155b4bd0",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Ingredient deleted successfully"
-                    },
-                    "404": {
-                        "description": "Ingredient not found"
+                        "description": "Category not found"
                     }
                 }
             }
         },
         "/api/products": {
             "get": {
+                "tags": ["Products"],
                 "summary": "Get all products",
                 "operationId": "24c51a4469fbe1d6ef9c4d258e31bbf3",
                 "responses": {
@@ -194,12 +85,330 @@
                     }
                 }
             }
+        },
+        "/api/products/{id}": {
+            "get": {
+                "tags": ["Products"],
+                "summary": "Get product by ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    }
+                }
+            }
+        },
+        "/api/products/category/{category_id}": {
+            "get": {
+                "tags": ["Products"],
+                "summary": "Get products by category ID",
+                "parameters": [
+                    {
+                        "name": "category_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            }
+        },
+        "/api/variants": {
+            "get": {
+                "tags": ["Variants"],
+                "summary": "Get all product variants",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/variants/{id}": {
+            "get": {
+                "tags": ["Variants"],
+                "summary": "Get variant by ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Variant not found"
+                    }
+                }
+            }
+        },
+        "/api/variants/product/{product_id}": {
+            "get": {
+                "tags": ["Variants"],
+                "summary": "Get variants by product ID",
+                "parameters": [
+                    {
+                        "name": "product_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    }
+                }
+            }
+        },
+        "/api/news": {
+            "get": {
+                "tags": ["News"],
+                "summary": "Get all news articles",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        },
+                        "description": "Page number"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        },
+                        "description": "Number of items per page"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/news/{id}": {
+            "get": {
+                "tags": ["News"],
+                "summary": "Get news article by ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "News article not found"
+                    }
+                }
+            }
+        },
+        "/api/news/slug/{slug}": {
+            "get": {
+                "tags": ["News"],
+                "summary": "Get news article by slug",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "News article not found"
+                    }
+                }
+            }
+        },
+        "/api/news/featured": {
+            "get": {
+                "tags": ["News"],
+                "summary": "Get featured news articles",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/videos": {
+            "get": {
+                "tags": ["Videos"],
+                "summary": "Get all videos",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        },
+                        "description": "Page number"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        },
+                        "description": "Number of items per page"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/videos/{id}": {
+            "get": {
+                "tags": ["Videos"],
+                "summary": "Get video by ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Video not found"
+                    }
+                }
+            }
+        },
+        "/api/videos/featured": {
+            "get": {
+                "tags": ["Videos"],
+                "summary": "Get featured videos",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/videos/category/{category_id}": {
+            "get": {
+                "tags": ["Videos"],
+                "summary": "Get videos by category ID",
+                "parameters": [
+                    {
+                        "name": "category_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            }
         }
     },
     "tags": [
         {
-            "name": "Ingredients",
-            "description": "API terkait data bahan makanan"
+            "name": "E-commerce",
+            "description": "API terkait produk e-commerce"
+        },
+        {
+            "name": "Categories",
+            "description": "API terkait data kategori"
+        },
+        {
+            "name": "Products",
+            "description": "API terkait data produk"
+        },
+        {
+            "name": "Variants",
+            "description": "API terkait varian produk"
+        },
+        {
+            "name": "News",
+            "description": "API terkait berita dan artikel"
+        },
+        {
+            "name": "Videos",
+            "description": "API terkait konten video"
         }
     ]
 }
