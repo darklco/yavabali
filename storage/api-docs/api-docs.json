@@ -1,414 +1,262 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-        "title": "Yavabali API",
-        "description": "API untuk mengelola data kategori, produk, varian produk, berita, dan video (hanya endpoint GET)",
-        "version": "1.0"
-    },
-    "paths": {
-        "/api/product-ecommerce": {
-            "get": {
-                "tags": ["E-commerce"],
-                "summary": "Get all e-commerce products",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 1
-                        },
-                        "description": "Page number"
-                    },
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 5
-                        },
-                        "description": "Number of items per page"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Yavabali API",
+    "description": "API untuk mengelola data kategori, produk, varian produk, berita, video, dan bahan (ingredients). Semua hanya endpoint GET berdasarkan ID.",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/product-ecommerce": {
+      "get": {
+        "tags": ["E-commerce"],
+        "summary": "Get all e-commerce products",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
             }
-        },
-        "/api/categories": {
-            "get": {
-                "tags": ["Categories"],
-                "summary": "Get all categories",
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 5
             }
-        },
-        "/api/categories/{slug}": {
-            "get": {
-                "tags": ["Categories"],
-                "summary": "Show category by slug",
-                "parameters": [
-                    {
-                        "name": "slug",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Category not found"
-                    }
-                }
-            }
-        },
-        "/api/products": {
-            "get": {
-                "tags": ["Products"],
-                "summary": "Get all products",
-                "operationId": "24c51a4469fbe1d6ef9c4d258e31bbf3",
-                "responses": {
-                    "200": {
-                        "description": "Successful operation"
-                    }
-                }
-            }
-        },
-        "/api/products/{id}": {
-            "get": {
-                "tags": ["Products"],
-                "summary": "Get product by ID",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Product not found"
-                    }
-                }
-            }
-        },
-        "/api/products/category/{category_id}": {
-            "get": {
-                "tags": ["Products"],
-                "summary": "Get products by category ID",
-                "parameters": [
-                    {
-                        "name": "category_id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Category not found"
-                    }
-                }
-            }
-        },
-        "/api/variants": {
-            "get": {
-                "tags": ["Variants"],
-                "summary": "Get all product variants",
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/variants/{id}": {
-            "get": {
-                "tags": ["Variants"],
-                "summary": "Get variant by ID",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Variant not found"
-                    }
-                }
-            }
-        },
-        "/api/variants/product/{product_id}": {
-            "get": {
-                "tags": ["Variants"],
-                "summary": "Get variants by product ID",
-                "parameters": [
-                    {
-                        "name": "product_id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Product not found"
-                    }
-                }
-            }
-        },
-        "/api/news": {
-            "get": {
-                "tags": ["News"],
-                "summary": "Get all news articles",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 1
-                        },
-                        "description": "Page number"
-                    },
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 10
-                        },
-                        "description": "Number of items per page"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/news/{id}": {
-            "get": {
-                "tags": ["News"],
-                "summary": "Get news article by ID",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "News article not found"
-                    }
-                }
-            }
-        },
-        "/api/news/slug/{slug}": {
-            "get": {
-                "tags": ["News"],
-                "summary": "Get news article by slug",
-                "parameters": [
-                    {
-                        "name": "slug",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "News article not found"
-                    }
-                }
-            }
-        },
-        "/api/news/featured": {
-            "get": {
-                "tags": ["News"],
-                "summary": "Get featured news articles",
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/videos": {
-            "get": {
-                "tags": ["Videos"],
-                "summary": "Get all videos",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 1
-                        },
-                        "description": "Page number"
-                    },
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 10
-                        },
-                        "description": "Number of items per page"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/videos/{id}": {
-            "get": {
-                "tags": ["Videos"],
-                "summary": "Get video by ID",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Video not found"
-                    }
-                }
-            }
-        },
-        "/api/videos/featured": {
-            "get": {
-                "tags": ["Videos"],
-                "summary": "Get featured videos",
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                }
-            }
-        },
-        "/api/videos/category/{category_id}": {
-            "get": {
-                "tags": ["Videos"],
-                "summary": "Get videos by category ID",
-                "parameters": [
-                    {
-                        "name": "category_id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Category not found"
-                    }
-                }
-            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Success" }
         }
+      }
     },
-    "tags": [
-        {
-            "name": "E-commerce",
-            "description": "API terkait produk e-commerce"
-        },
-        {
-            "name": "Categories",
-            "description": "API terkait data kategori"
-        },
-        {
-            "name": "Products",
-            "description": "API terkait data produk"
-        },
-        {
-            "name": "Variants",
-            "description": "API terkait varian produk"
-        },
-        {
-            "name": "News",
-            "description": "API terkait berita dan artikel"
-        },
-        {
-            "name": "Videos",
-            "description": "API terkait konten video"
+    "/api/categories": {
+      "get": {
+        "tags": ["Categories"],
+        "summary": "Get all categories",
+        "responses": {
+          "200": { "description": "Success" }
         }
-    ]
+      }
+    },
+    "/api/categories/{id}": {
+      "get": {
+        "tags": ["Categories"],
+        "summary": "Get category by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Success" },
+          "404": { "description": "Category not found" }
+        }
+      }
+    },
+    "/api/products": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "Get all products",
+        "responses": {
+          "200": { "description": "Success" }
+        }
+      }
+    },
+    "/api/products/{id}": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "Get product by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Success" },
+          "404": { "description": "Product not found" }
+        }
+      }
+    },
+    "/api/variants": {
+      "get": {
+        "tags": ["Variants"],
+        "summary": "Get all product variants",
+        "responses": {
+          "200": { "description": "Success" }
+        }
+      }
+    },
+    "/api/variants/{id}": {
+      "get": {
+        "tags": ["Variants"],
+        "summary": "Get variant by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Success" },
+          "404": { "description": "Variant not found" }
+        }
+      }
+    },
+    "/api/news": {
+      "get": {
+        "tags": ["News"],
+        "summary": "Get all news articles",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Success" }
+        }
+      }
+    },
+    "/api/news/{id}": {
+      "get": {
+        "tags": ["News"],
+        "summary": "Get news article by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Success" },
+          "404": { "description": "News not found" }
+        }
+      }
+    },
+    "/api/videos": {
+      "get": {
+        "tags": ["Videos"],
+        "summary": "Get all videos",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Success" }
+        }
+      }
+    },
+    "/api/videos/{id}": {
+      "get": {
+        "tags": ["Videos"],
+        "summary": "Get video by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Success" },
+          "404": { "description": "Video not found" }
+        }
+      }
+    },
+    "/api/ingredients": {
+      "get": {
+        "tags": ["Ingredients"],
+        "summary": "Get all ingredients",
+        "responses": {
+          "200": { "description": "Success" }
+        }
+      }
+    },
+    "/api/ingredients/{id}": {
+      "get": {
+        "tags": ["Ingredients"],
+        "summary": "Get ingredient by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Success" },
+          "404": { "description": "Ingredient not found" }
+        }
+      }
+    }
+  },
+  "tags": [
+    { "name": "E-commerce", "description": "API terkait produk e-commerce" },
+    { "name": "Categories", "description": "API terkait kategori" },
+    { "name": "Products", "description": "API terkait produk" },
+    { "name": "Variants", "description": "API terkait varian produk" },
+    { "name": "News", "description": "API terkait berita" },
+    { "name": "Videos", "description": "API terkait video" },
+    { "name": "Ingredients", "description": "API terkait bahan makanan atau gizi" }
+  ]
 }

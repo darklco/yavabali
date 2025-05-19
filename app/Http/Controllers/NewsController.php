@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Http\Requests\NewsRequest;
 use App\Http\Resources\NewsResource;
 use App\Models\News;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class NewsController extends Controller
@@ -17,42 +15,26 @@ class NewsController extends Controller
     public function index()
     {
         $news = News::latest()->paginate(10);
-        return NewsResource::collection($news)
-            ->additional(['status' => 'success']);
+
+        return NewsResource::collection($news)->additional([
+            'status' => 'success',
+        ]);
     }
 
     /**
-     * Store a new news item.
+     * Store a newly created news item.
      */
-    public function store(Request $request)
+    public function store(NewsRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|array',
-            'excerpt' => 'required|array',
-            'content' => 'required|array',
-            'media_url' => 'nullable|string',
-            'author' => 'required|array',
-            'is_highlight' => 'boolean',
+        $data = $request->validated();
+        $data['slug'] = Str::slug($data['title']['en'] ?? '');
+
+        $news = News::create($data);
+
+        return (new NewsResource($news))->additional([
+            'status' => 'success',
+            'message' => 'News created successfully',
         ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $validator->errors(),
-            ], 422);
-        }
-
-        $news = News::create([
-            'title' => $request->title,
-            'slug' => Str::slug($request->title['en'] ?? ''),
-            'excerpt' => $request->excerpt,
-            'content' => $request->content,
-            'media_url' => $request->media_url,
-            'author' => $request->author,
-            'is_highlight' => $request->is_highlight ?? false,
-        ]);
-
-        return new NewsResource($news);
     }
 
     /**
@@ -61,7 +43,7 @@ class NewsController extends Controller
     public function show($id)
     {
         $news = News::find($id);
-        
+
         if (!$news) {
             return response()->json([
                 'status' => 'error',
@@ -78,7 +60,7 @@ class NewsController extends Controller
     public function showBySlug($slug)
     {
         $news = News::where('slug', $slug)->first();
-        
+
         if (!$news) {
             return response()->json([
                 'status' => 'error',
@@ -92,10 +74,10 @@ class NewsController extends Controller
     /**
      * Update the specified news item.
      */
-    public function update(Request $request, $id)
+    public function update(NewsRequest $request, $id)
     {
         $news = News::find($id);
-        
+
         if (!$news) {
             return response()->json([
                 'status' => 'error',
@@ -103,31 +85,18 @@ class NewsController extends Controller
             ], 404);
         }
 
-        $validator = Validator::make($request->all(), [
-            'title' => 'array',
-            'excerpt' => 'array',
-            'content' => 'array',
-            'media_url' => 'nullable|string',
-            'author' => 'array',
-            'is_highlight' => 'boolean',
-        ]);
+        $data = $request->validated();
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $validator->errors(),
-            ], 422);
-        }
-
-        // Update slug only if title is provided
-        $data = $request->all();
-        if (isset($data['title']) && isset($data['title']['en'])) {
+        if (isset($data['title']['en'])) {
             $data['slug'] = Str::slug($data['title']['en']);
         }
 
         $news->update($data);
 
-        return new NewsResource($news);
+        return (new NewsResource($news))->additional([
+            'status' => 'success',
+            'message' => 'News updated successfully',
+        ]);
     }
 
     /**
@@ -136,7 +105,7 @@ class NewsController extends Controller
     public function destroy($id)
     {
         $news = News::find($id);
-        
+
         if (!$news) {
             return response()->json([
                 'status' => 'error',
@@ -160,9 +129,10 @@ class NewsController extends Controller
         $news = News::where('is_highlight', true)
             ->latest()
             ->paginate(10);
-            
-        return NewsResource::collection($news)
-            ->additional(['status' => 'success']);
+
+        return NewsResource::collection($news)->additional([
+            'status' => 'success',
+        ]);
     }
 
     /**
@@ -173,12 +143,11 @@ class NewsController extends Controller
         $news = News::latest()
             ->limit(8)
             ->get();
-            
-        return NewsResource::collection($news)
-            ->additional([
-                'status' => 'success',
-                'message' => 'You may like these news'
-            ]);
+
+        return NewsResource::collection($news)->additional([
+            'status' => 'success',
+            'message' => 'You may like these news',
+        ]);
     }
 
     /**
@@ -190,11 +159,10 @@ class NewsController extends Controller
             ->latest()
             ->limit(8)
             ->get();
-            
-        return NewsResource::collection($news)
-            ->additional([
-                'status' => 'success',
-                'message' => 'Related news'
-            ]);
+
+        return NewsResource::collection($news)->additional([
+            'status' => 'success',
+            'message' => 'Related news',
+        ]);
     }
 }

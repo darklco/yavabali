@@ -8,6 +8,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ProductEcommerceController;
 use App\Http\Controllers\VariantController;
+use App\Http\Controllers\IngredientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,3 +87,6 @@ use App\Http\Controllers\VariantController;
         Route::put('/{id}', [VariantController::class, 'update']);   // Update variant
         Route::delete('/{id}', [VariantController::class, 'destroy']); // Hapus variant
     });
+
+// ingredients
+    Route::get('/ingredients', [IngredientController::class, 'index']);
